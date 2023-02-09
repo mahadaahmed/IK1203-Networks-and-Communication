@@ -456,6 +456,29 @@ TCP (Transmission Control Protocol) is a reliable, connection-oriented, and wide
 
 - Establishing and Terminating Connections: TCP uses a three-way handshake (SYN, SYN-ACK, and ACK) to establish a connection and a four-way handshake (FIN, FIN-ACK, ACK, and FIN-ACK) to terminate a connection.
 
+**Congestion Control TCP**
+
+TCP congestion control is a mechanism used by the Transmission Control Protocol (TCP) to regulate the amount of data that is sent over a network to avoid overwhelming the network and causing congestion. The main objectives of TCP congestion control are to improve network utilization, prevent global synchronization, and avoid congestion collapse. Here are some key points to explain TCP congestion control:
+
+- Flow Control: TCP uses flow control to regulate the amount of data that is sent between the sender and receiver, ensuring that the receiver does not become overwhelmed with incoming data.
+
+- Window Size: The amount of data that can be transmitted between the sender and receiver at any given time is regulated by the congestion window size. This window size changes dynamically based on network conditions.
+
+- Slow Start: When a new connection is established, TCP begins with a small congestion window size and increases it slowly over time. This is called the "slow start" phase.
+
+- Congestion Avoidance: After the slow start phase, TCP moves into the "congestion avoidance" phase, where the congestion window size is increased at a linear rate.
+
+- Fast Retransmit and Fast Recovery: In case of packet loss, TCP uses fast retransmit and fast recovery to quickly recover lost data without having to wait for the retransmission timer to expire.
+
+- Timeouts: If a retransmission timer expires, TCP assumes that the segment was lost and retransmits the data. This helps to avoid congestion by reducing the amount of data sent in the network.
+
+- AIMD (Additive Increase Multiplicative Decrease): This is the algorithm used by TCP for adjusting the congestion window size. It uses an additive increase in the window size during the congestion avoidance phase and a multiplicative decrease in the window size in case of a timeout.
+
+- ECN (Explicit Congestion Notification): Some networks use ECN to communicate congestion information to TCP endpoints, allowing them to react to congestion more quickly and efficiently.
+
+- These are some of the key points that make up TCP congestion control. By regulating the amount of data sent over the network, TCP congestion control helps to improve network utilization and prevent congestion.
+
+
 **UDP**
 - unreliable, unordered delivery: UDP
     - no-frills extension of “best-effort”IP
