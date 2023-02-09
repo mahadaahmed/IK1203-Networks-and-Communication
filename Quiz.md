@@ -237,7 +237,7 @@ message transmission and reception"***
 
 - **Propagation Delay** = The delay between the packet being sent and the packet being received.
 
-![Transmission and Propagation Delay](/Images/Lecture1.png)
+![Transmission and Propagation Delay](/Lecture1.png)
 
 ## Internet Service Provider Access
 Different ways of accessing the Internet:
