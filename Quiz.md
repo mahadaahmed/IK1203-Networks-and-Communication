@@ -23,7 +23,7 @@
 **Question 3: Assume a simple model of the Internet with computers ("hosts"), switches ("routers") and links. For each layer in the Internet protocol stack, choose the description of its functionality that matches best. (When two devices are "directly connected", it means that there are no routers in between.)**
 
 - Application layer -> Rules for communication between processes on different hosts that together make up an application.
-- Transport layer -> Provides support for communication between processes on different hosts.
+- Transport layer -> Provides support for communication between processes on different hosts. 
 - Network layer -> Provides support for communication between hosts via nay routers in between.
 - Link layer -> Provides support for communication between directly connected routers or hosts.
 - Physical layer -> Defines for instance electrical and optical properties of a link
@@ -282,3 +282,190 @@ Different ways of accessing the Internet:
     - Ethernet, wireless, optical fiber, etc.
 - **Physical** = Bits "on the wire"
 
+
+# Lecture 2. Application Layer
+
+## Principles of Network Applications
+Two different ways applications are used to communicate with each other:
+- **Client-Server** = Client requests information from server. Server sends information back to client.
+
+    **Server:**
+    - always-on host
+    - permanent IP address
+    - data centers for scaling
+
+    **Client:**
+    - communicate with server
+    - may be intermittently connected
+    - may have dynamic IP addresses
+    - do not communicate directly with each other
+
+- **Peer-to-Peer** = Client and Client communicate with each other.
+    - No always-on server
+    - arbitrary end systems directly communicate
+    - complex management
+
+- **Messages**
+    - **Type of message** - request, response, notification, error
+    - **Message Syntax** - header, body
+    - **Message Semantics** - meaning of information in field
+    - **Message Rules** - rules for message syntax
+
+Generate a table with the headers: Application, data loss, throughput, time sensitive
+
+|Application|Data Loss|Throughput|Time Sensitive|
+|---	|---	|---	|---	|
+file transfer|no loss|elastic|no|
+e-mail|no loss|elastic|no|
+Web documents|no loss|elastic|no|
+real-time audio/video|loss-tolerant|audio: 5kbps-1Mbps, video:10kbps-5Mbps|yes, 100’s msec|
+stored audio/video|loss-tolerant|audio: 5kbps-1Mbps, video:10kbps-5Mbps|yes, few secs|
+interactive games|loss-tolerant|few kbps up|yes, 100’s msec|
+text messaging|no loss|elastic|yes and no|
+
+#### **TCP Service**
+
+- reliable transport between sending and receiving process
+- flow control: sender won’t overwhelm receiver
+- congestion control: throttle sender when network overloaded
+- does not provide: timing, minimum throughput guarantee, security
+- connection-oriented: setup required between client and server processes
+
+#### **UDP Service**
+- unreliable data transfer between sending and receiving process
+- does not provide: reliability, flow control, congestion control, timing, throughput guarantee, security, connection setup
+
+TCP is a connection-oriented protocol, whereas UDP is a connectionless protocol. A key difference between TCP and UDP is speed, as TCP is comparatively slower than UDP. Overall, UDP is a much faster, simpler, and efficient protocol, however, retransmission of lost data packets is only possible with TCP.
+
+## Web and HTTP
+![URL](/Lecture2.png)
+
+- **HTTP is stateless**
+Sses TCP, port 80:
+- Stateless protocol
+    - Client sends request
+    - Server responds
+- server maintains no
+    - information about past client requests
+- **protocols that maintain ”state” are complex!**
+    - past history (state) must be maintained
+    - if server/client crashes, their views of ”state” may be inconsistent, must be reconciled
+
+## DNS
+DNS (Domain Name System) is a critical component of the internet that allows us to use human-readable domain names (such as "google.com") instead of IP addresses (such as "172.217.167.110"). Here's an overview of how it works:
+
+**I. Overview**:
+
+- DNS is a hierarchical decentralized naming system for computers, services, or any resource connected to the Internet or a private network.
+- It maps domain names to IP addresses, enabling browsers to load Internet resources.
+- It operates in the background and is transparent to the user.
+
+
+**II. The Structure of DNS**:
+
+- The DNS namespace is organized as a tree structure, with the root at the top and subdomains branching off from it.
+- The root domain is represented by a dot (.) and is managed by the Internet Assigned Numbers Authority (IANA).
+- Top-level domains (TLDs), such as .com, .org, .gov, etc., are directly under the root domain.
+- Second-level domains (SLDs), such as "google" in "google.com," are under the TLDs.
+- The SLDs can further contain subdomains, such as "mail" in "mail.google.com."
+
+
+**III. The Role of DNS Servers**:
+
+- DNS servers act as a "telephone book" for the Internet, translating domain names into IP addresses.
+- There are two main types of DNS servers: recursive resolvers (also known as DNS clients) and authoritative nameservers.
+- Recursive resolvers initiate requests on behalf of clients (such as browsers) and send the requests to authoritative nameservers.
+- Authoritative nameservers store information about a domain and respond to requests with the correct IP address.
+
+
+**IV. The Process of Resolving a Domain Name**:
+1. The client (such as a browser) sends a request to its recursive resolver for the IP address associated with a domain name.
+2. The recursive resolver checks its cache to see if it has recently looked up the same domain name.
+3. If the information is in its cache, the recursive resolver returns the IP address to the client.
+4. If the information is not in the cache, the recursive resolver sends a request to the root nameserver.
+5. The root nameserver responds with the IP address of a top-level domain (TLD) nameserver.
+6. The recursive resolver sends a request to the TLD nameserver.
+7. The TLD nameserver responds with the IP address of the authoritative nameserver for the domain name in question.
+8. The recursive resolver sends a request to the authoritative nameserver.
+9. The authoritative nameserver responds with the IP address associated with the domain name.
+10. The recursive resolver returns the IP address to the client and stores it in its cache.
+
+
+**V. Security Considerations**:
+
+- DNS is a critical component of the Internet infrastructure and is vulnerable to a variety of security threats, such as DNS spoofing, cache poisoning, and man-in-the-middle attacks.
+- To improve security, the DNS industry has developed several extensions and technologies, including DNSSEC, DNS-over-HTTPS (DoH), and DNS-over-TLS (DoT).
+- In summary, the DNS is a distributed database that translates human-readable domain names into IP addresses and allows us to access websites and other - Internet resources using easy-to-remember names instead of complex IP addresses.
+
+#### **Cookies**
+
+what cookies can be used for:
+- authorization
+- shopping carts
+- recommendations
+- user session state (Web e-mail)
+
+how to keep ”state”:
+- protocol endpoints: maintain state at sender/receiver over multiple transactions
+- cookies: http messages carry state
+
+
+
+# Lecture 3. Transport Layer
+
+## Transport services and protocols
+- provide logical communication between app processes running on different hosts
+- transport protocols run in end systems
+    - send side: breaks app messages into segments, passes to network layer
+    - rcv side: reassembles segments into messages, passes to app layer
+- more than one transport protocol available to apps
+    - Internet: TCP and UDP
+
+## Transport vs. network layer
+- **Network layer**: Logical communication between hosts
+- **Transport layer**:Logical communication between processes
+    - relies on, and enhances, network layer services
+
+## Internet transport-layer protocols
+
+**TCP**
+- reliable, in-order delivery 
+    - congestion control
+    - flow control
+    - connection setup
+  
+TCP (Transmission Control Protocol) is a reliable, connection-oriented, and widely used transport layer protocol in the Internet Protocol (IP) suite. It is responsible for reliable delivery of data between applications running on different hosts. Here are the key features and characteristics of TCP:
+
+- Connection-Oriented: Unlike the unreliable and connectionless User Datagram Protocol (UDP), TCP establishes a reliable connection between two endpoints before transmitting data.
+
+- Reliable Data Delivery: TCP ensures that all data sent from one end is received at the other end and in the correct order. It uses error detection and retransmission mechanisms to handle packet loss, corruption, and other errors during transmission.
+
+- Flow Control: TCP uses sliding window flow control to regulate the amount of data sent and received by each endpoint. This mechanism helps prevent buffer overflow and network congestion.
+
+- Congestion Control: TCP uses algorithms to adjust the sending rate based on network conditions to avoid congestion and minimize data loss.
+
+- Segmentation: TCP divides data into segments, which are then transmitted and reassembled at the receiver.
+
+- Sequence and Acknowledgment Numbers: TCP assigns a sequence number to each segment transmitted and uses acknowledgment numbers to confirm the reception of data by the other end.
+
+- Retransmission: In case of packet loss or corruption, TCP retransmits the missing or damaged segments to ensure reliable data delivery.
+
+- Window Size: TCP uses the concept of window size to regulate the flow of data. The sender and receiver negotiate a window size, which determines the maximum amount of data that can be transmitted before receiving an acknowledgment.
+
+- Multiplexing and Demultiplexing: TCP allows multiple applications on the same host to share the same network connection by using port numbers to multiplex and demultiplex the data.
+
+- Establishing and Terminating Connections: TCP uses a three-way handshake (SYN, SYN-ACK, and ACK) to establish a connection and a four-way handshake (FIN, FIN-ACK, ACK, and FIN-ACK) to terminate a connection.
+
+**UDP**
+- unreliable, unordered delivery: UDP
+    - no-frills extension of “best-effort”IP
+- services not available: 
+    - delay guarantees
+    - bandwidth guarantees
+1. Connectionless: Unlike TCP, UDP does not establish a reliable connection between the sender and receiver. This makes it faster and more lightweight, as there is no overhead associated with establishing and maintaining a connection.
+2. No Flow Control: UDP does not implement any flow control mechanisms, meaning that packets can be sent as fast as the sender can generate them. This can lead to problems if the receiver is unable to process the incoming packets as quickly as they are being sent.
+3. No Error Correction: UDP does not provide any error correction mechanisms. This means that packets can be lost or delivered out of order, and there is no guarantee that a sent packet will actually reach its intended recipient.
+4. Checksum: UDP includes a checksum in each packet to detect corruption of the data in transit. If the checksum fails, the packet is discarded by the receiver.
+5. Multiplexing: UDP supports multiplexing, allowing multiple applications to share the same IP address and port number on the same host.
+6. Simple and Efficient: Due to its lack of overhead, UDP is often used for real-time applications where low latency is important, such as video conferencing or online gaming.
+7. Applications: UDP is used by a variety of applications, including DNS, SNMP, NTP, and TFTP.
