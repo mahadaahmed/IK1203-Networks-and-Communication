@@ -269,7 +269,7 @@ Different ways of accessing the Internet:
         - Decide what to do with it
         - Third delay component: TR
 
-![Packet Switching](/Images/Lecture1_2.png)
+![Packet Switching](/Lecture1_2.png)
 
 ## Internet Protocol Stack
 - **Application** = Supporting network applications.
