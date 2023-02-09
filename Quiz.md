@@ -200,96 +200,85 @@ Optimal window size = capacity x RTT = 8 Mbit/s x 10 ms = 10000 bytes
 <br>
 <br>
 
-## 4. Lab 1 HTTP and mail protocols
-**Question 1: Find the best matching description of the protocols.**
 
-- HTTP -> A stateless application-level protocol for distributed, collaborative, hypertext information systems.
-- SMTP -> A protocol for Internet electronic email transport.
-- POP3 -> A protocol that provide simple access to a mailbox (maildrop) maintained on a mail server.
-- IMAP -> A protocol that allows a client to access and manipulate electronic mail messages on a server.
+# Lecture 1. Computer Networks and the Internet
 
----
+## What is the internet?
+- **Hosts** = endpoints that are connected to the Internet. The hosts are running network applications.
+- **Communication Links** = The transmission rate is called *bandwidth*. There are two different types of links:
+    - **Physical** = a link between two hosts that is physically connected to the Internet. (fiber, copper)
+    - **Logical** = a link between two hosts that is connected to the Internet by means of a protocol. (radio, satellite)
+- **Packet Switches** = Forwards packets (chunks of data) between hosts.
+    - **Router** = Inspects data and chooses which link to use.
+    - **Switch** = Forwards packets between multiple links.
+- **Internet: "Network of networks"** = Interconnected ISPs (Internet Service Providers)
+- **Internet Protocol** = The protocol that allows hosts to communicate with each other. Examples: TCP, UDP, ICMP, IP, HTTP etc.
+- **Internet standard** = The set of protocols that are used to communicate with each other.
+    - **RFC** = The Internet standard is called a *Request for Comments*.
+    - **IETF** = The Internet standard is called an *Internet Engineering Task Force*.
+- **Programming Interface** = The programming interface that allows a host to communicate with the Internet. For example via the socket API.
 
-**Question 2: Match the application layer protocols to the port numbers.**
+***"protocols define format and order of
+messages sent and received among
+network entities, and actions taken on
+message transmission and reception"***
 
-- HTTP -> 80
-- SMTP -> 25
-- POP3 -> 110
-- IMAP -> 143
-- HTTPS -> 443
-- IMAP over TLS/SSL -> 993
-- POP3 over TLS/SSL -> 995
-- E-mail message submission -> 587
+## Network edge
+- **Network edge** = The edge of a network.
+    - **Host** = A host is a device that is connected to the Internet.
+    - **Server** = A server is a host that is connected to the Internet.
 
-<br>
-<br>
-<br>
+- **Packets** = Host sending information is breaking the information into packets with a length of **L** bits.
+- **Links** = are serial connections between two hosts.
+    - Packets transmitted one bit at a time at a certain rate **R**.
+    - Links transmission rate, link capacity, or link bandwidth.
 
-## 6. Testing HTTP using telnet
+*Packet Transmission Delay = time needed to transmit a packet with L bits into link = **L (bits) / R (bits/sec)***
 
-**Question 5: The first digit of the Status code for HTTP responses defines the class of response. What do the different values defined for the first digit indicate?
-HINT: See details of the Response Status Codes in the RFC7231.**
+- **Propagation Delay** = The delay between the packet being sent and the packet being received.
 
-- 1xx - Informational
-- 2xx - Successful
-- 3xx - Redirection
-- 4xx - Client Error
-- 5xx - Server Error
+![Transmission and Propagation Delay](/Images/Lecture1.png)
 
----
+## Internet Service Provider Access
+Different ways of accessing the Internet:
+- **xDSL (Digital Subscriber Line)**
+    - ADSL, ADSL2, ADSL2+, VDSL, ...
+    - Existing telephone lines
+    - 1 - 100 Mbps
+- **Optical Fiber**
+    - 10 Mbps - 100 Gbps
+- **DOCSIS (Data Over Cable Service Interface Specification)**
+    - DOCSIS/Euro-DOCSIS (European DOCSIS)
+    - Internet access over cable TV networks
+    - 1 - 200Mbps
+- **Wireless broadband**
+    - 2.4 GHz - 5 GHz
+    - Internet access over mobile phone networks
+    - 1 Mbps - 1 Gbps
 
-**Question 6: Read RFC 7231 Section 6 and match the HTTP/1.1 response status codes to the correct descriptions.**
+## The Network Core
+- Mesh of interconnected routers
+- **Packet Switching**
+    - forward packets from one router to the next
+    - each packet transmitted at full link capacity
 
-- 200 -> OK
-- 301 -> Moved Permanently
-- 401 -> Unauthorized
-- 404 -> Not Found
-- 500 -> Internal Server Error
-- 502 -> Bad Gateway
-- 503 -> Service Unavailable
-- 302 -> Found
+- Packet Switching: store-and-forward
+    - Store-and-forward: entire packet must arrive at a router before it can be transmitted on next link.
+    - Processing delay: it takes some time for router to process packet before transmitting on next link
+        - Check and verify packet
+        - Decide what to do with it
+        - Third delay component: TR
 
----
+![Packet Switching](/Images/Lecture1_2.png)
 
-**Question 7: If you only want to test hypertext links for validity, accessibility, and recent information, it suffices to obtain meta information about the entity implied by the request without transferring the body itself. What is an alternative method that you can use for this instead of GET?
-IMPORTANT: You must write only the method name in uppercase without any white spaces.**
+## Internet Protocol Stack
+- **Application** = Supporting network applications.
+    - FTP, SMTP, HTTP
+- **Transport** = process-process data transfer.
+    - TCP, UDP
+- **Network** = Routing of datagrams from source to destination
+    - IP, ARP, routing protocols
+- **Link** = data transfer between neighboring network elements
+    - Ethernet, wireless, optical fiber, etc.
+- **Physical** = Bits "on the wire"
 
-HEAD
-
-<br>
-<br>
-<br>
-
-## 13. Testing SMTP using OpenSSL
-
-**Question 2: During the authentication, you should see that the mail server sends a message with a 334 reply. What does the response code 334 signify?**
-
-- [ ] Redirection 
-- [ ] Failed authentication 
-- [ ] Client error 
-- [ ] Successful authentication 
-- [x] Server challenge 
-- [ ] Server error
-
----
-
-**Question 4: Read RFC 5321 section 4.1 (Links to an external site.) and match the SMTP commands.**
-
-- HELO -> The sender introduces itself
-- VRFY -> Check if name is a local user
-- QUIT -> Instruct the SMTP server to close the connection
-- RSET -> Clear the current mail transaction
-- MAIL FROM -> Specify reverse-path (sender mailbox)
-- RCPT TO -> Specify the recipient (destination mailbox)
-- DATA -> Start of mail content
-
----
-
-**Question 5: Read RFC 5321 Section 4.2 (Links to an external site.) and match the SMTP Reply Codes with their descriptions.**
-
-- 220 -> Service Ready
-- 250 -> Requested mail action okay, completed
-- 421 -> Service not available
-- 500 -> Syntax error, command unrecognized
-- 503 -> Bad sequence of commands
-- 554 -> Transaction failed
